@@ -7,8 +7,8 @@ import {
   View,
 } from 'react-native';
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
-import CustomButtons from '../../components/CustomButton';
 import images from '../../assets/images/images';
+import CustomButtons from '../../components/CustomButton';
 import styles from './styles';
 // import { MainBundlePath, readDir } from 'react-native-fs';
 
