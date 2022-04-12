@@ -1,17 +1,13 @@
 import { StyleSheet } from 'react-native';
 import { Colors, Metrics } from '../../theme';
 
-const { horizontalScale, verticalScale, moderateScale } = Metrics;
+const { moderateScale } = Metrics;
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
   },
-  imageStyle: {
-    height: verticalScale(320),
-    width: horizontalScale(320),
-    top: verticalScale(180),
-    left: horizontalScale(30),
+  svgStyle: {
     position: 'absolute',
   },
   textStyle: {

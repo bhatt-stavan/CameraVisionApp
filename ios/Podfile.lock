@@ -72,8 +72,82 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - fmt (6.2.1)
   - glog (0.3.5)
+  - GoogleDataTransport (9.1.2):
+    - GoogleUtilities/Environment (~> 7.2)
+    - nanopb (~> 2.30908.0)
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleMLKit/ImageLabeling (2.6.0):
+    - GoogleMLKit/MLKitCore
+    - MLKitImageLabeling (~> 1.5.0)
+  - GoogleMLKit/MLKitCore (2.6.0):
+    - MLKitCommon (~> 5.0.0)
+  - GoogleToolboxForMac/DebugUtils (2.3.2):
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+  - GoogleToolboxForMac/Defines (2.3.2)
+  - GoogleToolboxForMac/Logger (2.3.2):
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+  - "GoogleToolboxForMac/NSData+zlib (2.3.2)":
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+  - "GoogleToolboxForMac/NSDictionary+URLArguments (2.3.2)":
+    - GoogleToolboxForMac/DebugUtils (= 2.3.2)
+    - GoogleToolboxForMac/Defines (= 2.3.2)
+    - "GoogleToolboxForMac/NSString+URLArguments (= 2.3.2)"
+  - "GoogleToolboxForMac/NSString+URLArguments (2.3.2)"
+  - GoogleUtilities/Environment (7.7.0):
+    - PromisesObjC (< 3.0, >= 1.2)
+  - GoogleUtilities/Logger (7.7.0):
+    - GoogleUtilities/Environment
+  - GoogleUtilities/UserDefaults (7.7.0):
+    - GoogleUtilities/Logger
+  - GoogleUtilitiesComponents (1.1.0):
+    - GoogleUtilities/Logger
+  - GTMSessionFetcher/Core (1.7.1)
   - libevent (2.1.12)
+  - lottie-ios (3.2.3)
+  - lottie-react-native (5.0.1):
+    - lottie-ios (~> 3.2.3)
+    - React-Core
+  - MLImage (1.0.0-beta2)
+  - MLKitCommon (5.0.0):
+    - GoogleDataTransport (~> 9.0)
+    - GoogleToolboxForMac/Logger (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+    - "GoogleToolboxForMac/NSDictionary+URLArguments (~> 2.1)"
+    - GoogleUtilities/UserDefaults (~> 7.0)
+    - GoogleUtilitiesComponents (~> 1.0)
+    - GTMSessionFetcher/Core (~> 1.1)
+    - Protobuf (~> 3.12)
+  - MLKitImageLabeling (1.5.0):
+    - MLKitCommon (~> 5.0)
+    - MLKitImageLabelingCommon (~> 3.0)
+    - MLKitVision (~> 3.0)
+    - MLKitVisionKit (~> 4.0)
+  - MLKitImageLabelingCommon (3.0.0):
+    - MLKitCommon (~> 5.0)
+    - MLKitVision (~> 3.0)
+  - MLKitObjectDetectionCommon (3.0.0):
+    - MLKitCommon (~> 5.0)
+    - MLKitVision (~> 3.0)
+  - MLKitVision (3.0.0):
+    - GoogleToolboxForMac/Logger (~> 2.1)
+    - "GoogleToolboxForMac/NSData+zlib (~> 2.1)"
+    - GTMSessionFetcher/Core (~> 1.1)
+    - MLImage (= 1.0.0-beta2)
+    - MLKitCommon (~> 5.0)
+    - Protobuf (~> 3.12)
+  - MLKitVisionKit (4.0.0):
+    - MLKitCommon (~> 5.0)
+    - MLKitImageLabelingCommon (~> 3.0)
+    - MLKitObjectDetectionCommon (~> 3.0)
+    - MLKitVision (~> 3.0)
+  - nanopb (2.30908.0):
+    - nanopb/decode (= 2.30908.0)
+    - nanopb/encode (= 2.30908.0)
+  - nanopb/decode (2.30908.0)
+  - nanopb/encode (2.30908.0)
   - OpenSSL-Universal (1.1.180)
+  - PromisesObjC (2.0.0)
+  - Protobuf (3.20.0)
   - RCT-Folly (2021.06.28.00-v2):
     - boost
     - DoubleConversion
@@ -345,9 +419,41 @@ PODS:
     - React-perflogger (= 0.67.0)
   - RNFS (2.19.0):
     - React-Core
+  - RNReanimated (2.7.0):
+    - DoubleConversion
+    - FBLazyVector
+    - FBReactNativeSpec
+    - glog
+    - RCT-Folly
+    - RCTRequired
+    - RCTTypeSafety
+    - React-callinvoker
+    - React-Core
+    - React-Core/DevSupport
+    - React-Core/RCTWebSocket
+    - React-CoreModules
+    - React-cxxreact
+    - React-jsi
+    - React-jsiexecutor
+    - React-jsinspector
+    - React-RCTActionSheet
+    - React-RCTAnimation
+    - React-RCTBlob
+    - React-RCTImage
+    - React-RCTLinking
+    - React-RCTNetwork
+    - React-RCTSettings
+    - React-RCTText
+    - ReactCommon/turbomodule/core
+    - Yoga
   - RNScreens (3.13.1):
     - React-Core
     - React-RCTImage
+  - RNSVG (12.3.0):
+    - React-Core
+  - vision-camera-image-labeler (0.1.6):
+    - GoogleMLKit/ImageLabeling
+    - React-Core
   - VisionCamera (2.13.2):
     - React
     - React-callinvoker
@@ -383,6 +489,7 @@ DEPENDENCIES:
   - FlipperKit/FlipperKitUserDefaultsPlugin (= 0.99.0)
   - FlipperKit/SKIOSNetworkPlugin (= 0.99.0)
   - glog (from `../node_modules/react-native/third-party-podspecs/glog.podspec`)
+  - lottie-react-native (from `../node_modules/lottie-react-native`)
   - OpenSSL-Universal (= 1.1.180)
   - RCT-Folly (from `../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec`)
   - RCTRequired (from `../node_modules/react-native/Libraries/RCTRequired`)
@@ -412,7 +519,10 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNFS (from `../node_modules/react-native-fs`)
+  - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSVG (from `../node_modules/react-native-svg`)
+  - vision-camera-image-labeler (from `../node_modules/vision-camera-image-labeler`)
   - VisionCamera (from `../node_modules/react-native-vision-camera`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
 
@@ -429,8 +539,25 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - fmt
+    - GoogleDataTransport
+    - GoogleMLKit
+    - GoogleToolboxForMac
+    - GoogleUtilities
+    - GoogleUtilitiesComponents
+    - GTMSessionFetcher
     - libevent
+    - lottie-ios
+    - MLImage
+    - MLKitCommon
+    - MLKitImageLabeling
+    - MLKitImageLabelingCommon
+    - MLKitObjectDetectionCommon
+    - MLKitVision
+    - MLKitVisionKit
+    - nanopb
     - OpenSSL-Universal
+    - PromisesObjC
+    - Protobuf
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -444,6 +571,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/React/FBReactNativeSpec"
   glog:
     :podspec: "../node_modules/react-native/third-party-podspecs/glog.podspec"
+  lottie-react-native:
+    :path: "../node_modules/lottie-react-native"
   RCT-Folly:
     :podspec: "../node_modules/react-native/third-party-podspecs/RCT-Folly.podspec"
   RCTRequired:
@@ -496,8 +625,14 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNFS:
     :path: "../node_modules/react-native-fs"
+  RNReanimated:
+    :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSVG:
+    :path: "../node_modules/react-native-svg"
+  vision-camera-image-labeler:
+    :path: "../node_modules/vision-camera-image-labeler"
   VisionCamera:
     :path: "../node_modules/react-native-vision-camera"
   Yoga:
@@ -520,8 +655,26 @@ SPEC CHECKSUMS:
   FlipperKit: d8d346844eca5d9120c17d441a2f38596e8ed2b9
   fmt: ff9d55029c625d3757ed641535fd4a75fedc7ce9
   glog: 85ecdd10ee8d8ec362ef519a6a45ff9aa27b2e85
+  GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
+  GoogleMLKit: 755661c46990a85e42278015f26400286d98ad95
+  GoogleToolboxForMac: 8bef7c7c5cf7291c687cf5354f39f9db6399ad34
+  GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
+  GoogleUtilitiesComponents: 679b2c881db3b615a2777504623df6122dd20afe
+  GTMSessionFetcher: 4577a4cc914a5a07c40a8a0ad0acc22080418c2d
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
+  lottie-ios: c058aeafa76daa4cf64d773554bccc8385d0150e
+  lottie-react-native: a029a86e1689c86a07169c520ae770e84348cd20
+  MLImage: a454f9f8ecfd537783a12f9488f5be1a68820829
+  MLKitCommon: 3bc17c6f7d25ce3660f030350b46ae7ec9ebca6e
+  MLKitImageLabeling: 8e19e6cea9b220c5ae6beb85e2c0b14c370fdb3a
+  MLKitImageLabelingCommon: 9916b03956a3a647ebc7471a12b1eb0798ae84f8
+  MLKitObjectDetectionCommon: 81d8ef93327005779a05fb6f2d74b0b0ef8840b1
+  MLKitVision: e87dc3f2e456a6ab32361ebd985e078dd2746143
+  MLKitVisionKit: 68c122ceb9b2fe1a05ffe09341c750d566c77170
+  nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
+  PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
+  Protobuf: 66e2f3b26a35e4cc379831f4ced538274ee4b923
   RCT-Folly: 803a9cfd78114b2ec0f140cfa6fa2a6bafb2d685
   RCTRequired: 1af97c470c81e8cbb92c5ae42c4838ea95761743
   RCTTypeSafety: 809546c781453daf95eb1c40aa8b6970a4487028
@@ -548,11 +701,14 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 4512c9287cc72ba30bb1d5e01e6bde7a69f2d22b
   ReactCommon: af6dd2c8c0de935841fa809caf41b2093bb9075c
   RNFS: fc610f78fdf8bfc89a9e5cc2f898519f4dba1002
+  RNReanimated: 96ab42cfb0e5517293499e0f3f810420eb459f75
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19
+  RNSVG: 302bfc9905bd8122f08966dc2ce2d07b7b52b9f8
+  vision-camera-image-labeler: 44dc35bea2ce7a6967d1033e48a210500a50be7d
   VisionCamera: d4d9511c7a98126147d57d0034b0b5ff1f8afaa3
   Yoga: 3f5bfc54ce164fcd5b5d7f9f4232182d6298dd56
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 
-PODFILE CHECKSUM: f7d029b0c6c4745bbc36e97910215b28263a8eb1
+PODFILE CHECKSUM: b62a3ef3ec5605d0902650844ba12a2257fcd8a8
 
 COCOAPODS: 1.11.2

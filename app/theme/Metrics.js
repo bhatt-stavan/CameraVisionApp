@@ -12,11 +12,11 @@ const guidelineBaseWidth = 375;
 
 const guidelineBaseHeight = 812;
 
-const horizontalScale = (size: number) => (width / guidelineBaseWidth) * size;
+const horizontalScale = size => (width / guidelineBaseWidth) * size;
 
-const verticalScale = (size: number) => (height / guidelineBaseHeight) * size;
+const verticalScale = size => (height / guidelineBaseHeight) * size;
 
-const moderateScale = (size: number, factor = 0.5) =>
+const moderateScale = (size, factor = 0.5) =>
   size + (horizontalScale(size) - size) * factor;
 
 const globalMetrics = {

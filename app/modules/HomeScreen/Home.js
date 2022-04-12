@@ -1,4 +1,5 @@
-import React, { useRef, useState } from 'react';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -9,12 +10,14 @@ import {
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import images from '../../assets/images/images';
 import CustomButtons from '../../components/CustomButton';
+import NavigationString from '../../constants/Navigations';
 import styles from './styles';
-// import { MainBundlePath, readDir } from 'react-native-fs';
 
 const Home = () => {
+  const navigation = useNavigation();
+  const isFocused = useIsFocused();
   var RNFS = require('react-native-fs');
-  console.log(RNFS.ExternalStorageDirectoryPath);
+
   const [image, setImage] = useState('');
   const [isCaptured, setCaptured] = useState(false);
   const [activeCamera, setActiveCamera] = useState(true);
@@ -24,7 +27,10 @@ const Home = () => {
   const camera = useRef(null);
   const imagePathToBeStored =
     `${RNFS.ExternalStorageDirectoryPath}` + '/DCIM/RNVC';
-  RNFS.mkdir(imagePathToBeStored).then(() => {});
+
+  useEffect(() => {
+    RNFS.mkdir(imagePathToBeStored).then(() => {});
+  }, [RNFS, imagePathToBeStored]);
 
   const takePhoto = () => {
     camera.current
@@ -36,7 +42,6 @@ const Home = () => {
       .then(res => {
         setImage(res.path);
         setCaptured(true);
-        console.log(res.path);
       });
   };
 
@@ -51,9 +56,23 @@ const Home = () => {
   const hdrPathHandler = hdrMode === true ? images.hdrOn : images.hdrOff;
 
   const flashPathHandler = camFlash === 'on' ? images.flashOn : images.flashOff;
+
   if (devices.front == null) {
     return <ActivityIndicator style={styles.screen} />;
   }
+
+  const qrCodeHandle = () => {
+    navigation.navigate(NavigationString.DETAILS);
+  };
+
+  const faceDetectionHandle = () => {
+    navigation.navigate(NavigationString.FACE);
+  };
+
+  if (!isFocused) {
+    return null;
+  }
+
   return (
     <>
       <Camera
@@ -75,6 +94,16 @@ const Home = () => {
             path={hdrPathHandler}
             onPressFun={hdrHandler}
             style={styles.hdrImage}
+          />
+          <CustomButtons
+            path={images.qr_code}
+            onPressFun={qrCodeHandle}
+            style={styles.qrImage}
+          />
+          <CustomButtons
+            path={images.face}
+            onPressFun={faceDetectionHandle}
+            style={styles.faceImage}
           />
           {!activeCamera ? (
             devices.front?.hasFlash ? (
