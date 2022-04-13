@@ -40,6 +40,14 @@ const Home = () => {
       });
   };
 
+  const captureVideo = async () => {
+    const video = await camera.current.startRecording({
+      flash: 'on',
+      onRecordingFinished: video => console.log(video),
+      onRecordingError: error => console.error(error),
+    });
+  };
+
   const flashHandler = () => {
     camFlash === 'off' ? setCamFlash('on') : setCamFlash('off');
   };
@@ -94,7 +102,11 @@ const Home = () => {
             />
           )}
           <View style={styles.captureContainer}>
-            <TouchableOpacity style={styles.circleRing} onPress={takePhoto} />
+            <TouchableOpacity
+              style={styles.circleRing}
+              onPress={takePhoto}
+              onLongPress={captureVideo}
+            />
           </View>
         </>
       ) : (
