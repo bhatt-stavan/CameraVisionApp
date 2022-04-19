@@ -5,7 +5,6 @@ import {
   ImageBackground,
   TouchableOpacity,
   View,
-  Alert,
 } from 'react-native';
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import CustomButtons from '../../components/CustomButton';
@@ -20,11 +19,13 @@ const Home = () => {
   const [isCaptured, setCaptured] = useState(false);
   const [activeCamera, setActiveCamera] = useState(true);
   const [camFlash, setCamFlash] = useState('off');
+  const [hdrMode, setHdrMode] = useState(false);
   const devices = useCameraDevices();
   const camera = useRef(null);
   const imagePathToBeStored =
     `${RNFS.ExternalStorageDirectoryPath}` + '/DCIM/RNVC';
   RNFS.mkdir(imagePathToBeStored).then(() => {});
+
   const takePhoto = () => {
     camera.current
       .takeSnapshot({
@@ -43,6 +44,12 @@ const Home = () => {
     camFlash === 'off' ? setCamFlash('on') : setCamFlash('off');
   };
 
+  const hdrHandler = () => {
+    hdrMode === false ? setHdrMode(true) : setHdrMode(false);
+  };
+
+  const hdrPathHandler = hdrMode === true ? images.hdrOn : images.hdrOff;
+
   const flashPathHandler = camFlash === 'on' ? images.flashOn : images.flashOff;
   if (devices.front == null) {
     return <ActivityIndicator style={styles.screen} />;
@@ -55,6 +62,7 @@ const Home = () => {
         device={activeCamera ? devices.back : devices.front}
         isActive={true}
         photo={true}
+        hdr={hdrMode}
       />
 
       {!isCaptured ? (
@@ -62,6 +70,11 @@ const Home = () => {
           <CustomButtons
             path={images.flip}
             onPressFun={() => setActiveCamera(!activeCamera)}
+          />
+          <CustomButtons
+            path={hdrPathHandler}
+            onPressFun={hdrHandler}
+            style={styles.hdrImage}
           />
           {!activeCamera ? (
             devices.front?.hasFlash ? (

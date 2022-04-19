@@ -29,6 +29,9 @@ const styles = StyleSheet.create({
   flashImage: {
     top: Metrics.verticalScale(50),
   },
+  hdrImage: {
+    top: Metrics.verticalScale(100),
+  },
   cancelButton: {
     height: horizontalScale(40),
     width: verticalScale(40),
