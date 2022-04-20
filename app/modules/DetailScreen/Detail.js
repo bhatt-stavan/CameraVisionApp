@@ -1,7 +1,7 @@
-import { View, StyleSheet } from 'react-native';
 import React from 'react';
-import styles from './styles';
+import { StyleSheet, View } from 'react-native';
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
+import styles from './styles';
 
 const Detail = () => {
   const devices = useCameraDevices();

@@ -18,6 +18,8 @@ const Home = () => {
   const [image, setImage] = useState('');
   const [isCaptured, setCaptured] = useState(false);
   const [activeCamera, setActiveCamera] = useState(true);
+  const [startVideo, setStartVideo] = useState(false);
+  const [isPress, setIsPress] = useState(true);
   const [camFlash, setCamFlash] = useState('off');
   const [hdrMode, setHdrMode] = useState(false);
   const devices = useCameraDevices();
@@ -40,10 +42,13 @@ const Home = () => {
       });
   };
 
-  const captureVideo = async () => {
-    const video = await camera.current.startRecording({
+  const captureVideo = () => {
+    camera.current.startRecording({
       flash: 'on',
-      onRecordingFinished: video => console.log(video),
+      onRecordingFinished: video => {
+        setStartVideo(false);
+        console.log('>>>>>>>', video);
+      },
       onRecordingError: error => console.error(error),
     });
   };
@@ -70,7 +75,13 @@ const Home = () => {
         device={activeCamera ? devices.back : devices.front}
         isActive={true}
         photo={true}
+        video={startVideo}
+        audio={true}
+        VideoFileType={'mp4'}
+        fps={240}
+        videoStabilizationMode={'Standard'}
         hdr={hdrMode}
+        lowLightBoost={true}
       />
 
       {!isCaptured ? (
@@ -103,9 +114,22 @@ const Home = () => {
           )}
           <View style={styles.captureContainer}>
             <TouchableOpacity
-              style={styles.circleRing}
+              style={isPress ? styles.circleRing : styles.redRing}
               onPress={takePhoto}
-              onLongPress={captureVideo}
+              delayLongPress={500}
+              onLongPress={() => {
+                captureVideo();
+              }}
+              onPressIn={() => {
+                setIsPress(false);
+                setStartVideo(true);
+              }}
+              onPressOut={() => {
+                camera.current
+                  .stopRecording()
+                  .then(res => console.log('StoppingVVideo: >>>>>>>>', res));
+                setIsPress(true);
+              }}
             />
           </View>
         </>

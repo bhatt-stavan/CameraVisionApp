@@ -1,6 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Metrics } from '../../theme';
-
+import { Colors, Metrics } from '../../theme';
 const { verticalScale, horizontalScale, moderateScale } = Metrics;
 const styles = StyleSheet.create({
   screen: {
@@ -19,7 +18,7 @@ const styles = StyleSheet.create({
     padding: moderateScale(30),
     marginBottom: verticalScale(40),
     borderRadius: moderateScale(80),
-    borderColor: 'white',
+    borderColor: Colors.white,
   },
   displayImage: {
     height: '100%',
@@ -39,11 +38,19 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(15),
   },
   downloadButton: {
-    tintColor: 'white',
+    tintColor: Colors.white,
     height: horizontalScale(35),
     width: verticalScale(35),
     alignSelf: 'flex-end',
     margin: 20,
+  },
+  redRing: {
+    borderWidth: 5,
+    height: verticalScale(8),
+    padding: moderateScale(30),
+    marginBottom: verticalScale(40),
+    borderRadius: moderateScale(80),
+    backgroundColor: Colors.red,
   },
 });
 
