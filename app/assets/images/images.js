@@ -6,4 +6,7 @@ export default {
   download: require('./download.png'),
   hdrOn: require('./hdrOn.png'),
   hdrOff: require('./hdrOff.png'),
+  qr_scanner: require('../images/qr_scanner.png'),
+  qr_code: require('./qr_code.png'),
+  face: require('./face.png'),
 };

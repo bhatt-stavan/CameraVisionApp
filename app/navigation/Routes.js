@@ -1,8 +1,8 @@
-import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { Home, Detail } from '../modules';
+import React from 'react';
 import navigationConstants from '../constants/Navigations';
+import { Detail, FaceDetectionScreen, Home } from '../modules';
 
 const Stack = createNativeStackNavigator();
 
@@ -14,6 +14,10 @@ const Routes = () => {
         screenOptions={{ headerShown: false }}>
         <Stack.Screen name={navigationConstants.HOME} component={Home} />
         <Stack.Screen name={navigationConstants.DETAILS} component={Detail} />
+        <Stack.Screen
+          name={navigationConstants.FACE}
+          component={FaceDetectionScreen}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

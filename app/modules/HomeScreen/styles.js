@@ -27,10 +27,16 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   flashImage: {
-    top: Metrics.verticalScale(50),
+    top: Metrics.verticalScale(200),
   },
   hdrImage: {
+    top: Metrics.verticalScale(50),
+  },
+  qrImage: {
     top: Metrics.verticalScale(100),
+  },
+  faceImage: {
+    top: Metrics.verticalScale(150),
   },
   cancelButton: {
     height: horizontalScale(40),
@@ -43,7 +49,7 @@ const styles = StyleSheet.create({
     height: horizontalScale(35),
     width: verticalScale(35),
     alignSelf: 'flex-end',
-    margin: 20,
+    margin: moderateScale(20),
   },
 });
 
