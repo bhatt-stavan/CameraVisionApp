@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Metrics } from '../../theme';
+import { Metrics, Colors } from '../../theme';
 
 const { verticalScale, horizontalScale, moderateScale } = Metrics;
 const styles = StyleSheet.create({
@@ -50,6 +50,14 @@ const styles = StyleSheet.create({
     width: verticalScale(35),
     alignSelf: 'flex-end',
     margin: moderateScale(20),
+  },
+  redRing: {
+    borderWidth: 5,
+    height: verticalScale(8),
+    padding: moderateScale(30),
+    marginBottom: verticalScale(40),
+    borderRadius: moderateScale(80),
+    backgroundColor: Colors.red,
   },
 });
 

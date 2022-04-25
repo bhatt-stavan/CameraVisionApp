@@ -1,5 +1,5 @@
 import { useIsFocused } from '@react-navigation/native';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -17,6 +17,8 @@ import styles from './styles';
 const Home = () => {
   const isFocused = useIsFocused();
   const { isAuthentication, checkPermission } = useHandlePermission();
+  const [startVideo, setStartVideo] = useState(false);
+  const [isPress, setIsPress] = useState(true);
   const {
     image,
     isCaptured,
@@ -36,6 +38,21 @@ const Home = () => {
     qrCodeHandle,
     faceDetectionHandle,
   } = useHandleHomeStates();
+
+  const captureVideo = () => {
+    camera.current.startRecording({
+      flash: flashHandler,
+      onRecordingFinished: video => {
+        setStartVideo(false);
+        console.log('>>>>>>>', video.path);
+        RNFS.moveFile(
+          video.path,
+          `${imagePathToBeStored}/${video.path.split('/').pop()}`,
+        );
+      },
+      onRecordingError: error => console.error(error),
+    });
+  };
 
   useEffect(() => {
     checkPermission();
@@ -60,7 +77,13 @@ const Home = () => {
             device={activeCamera ? devices.back : devices.front}
             isActive={true}
             photo={true}
+            video={startVideo}
+            audio={true}
+            VideoFileType={'mp4'}
+            fps={240}
+            videoStabilizationMode={'Standard'}
             hdr={hdrMode}
+            lowLightBoost={true}
           />
 
           {!isCaptured ? (
@@ -103,8 +126,24 @@ const Home = () => {
               )}
               <View style={styles.captureContainer}>
                 <TouchableOpacity
-                  style={styles.circleRing}
+                  style={isPress ? styles.circleRing : styles.redRing}
                   onPress={takePhoto}
+                  delayLongPress={500}
+                  onLongPress={() => {
+                    captureVideo();
+                  }}
+                  onPressIn={() => {
+                    setIsPress(false);
+                    setStartVideo(true);
+                  }}
+                  onPressOut={() => {
+                    camera.current
+                      .stopRecording()
+                      .then(res =>
+                        console.log('StoppingVVideo: >>>>>>>>', res),
+                      );
+                    setIsPress(true);
+                  }}
                 />
               </View>
             </>
