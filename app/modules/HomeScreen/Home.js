@@ -128,7 +128,8 @@ const Home = () => {
                 <TouchableOpacity
                   style={isPress ? styles.circleRing : styles.redRing}
                   onPress={takePhoto}
-                  delayLongPress={500}
+                  delayLongPress={1000}
+                  activeOpacity={0.5}
                   onLongPress={() => {
                     captureVideo();
                   }}
