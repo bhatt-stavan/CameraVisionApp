@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   AppState,
+  LogBox,
   NativeModules,
   PanResponder,
   StyleSheet,
@@ -21,6 +22,7 @@ import {
 } from 'react-native-vision-camera';
 import styles from './styles';
 
+LogBox.ignoreAllLogs();
 const Home = () => {
   const [cameraAccess, setCameraAccess] = useState(false);
   const camera = useRef(null);
@@ -30,11 +32,10 @@ const Home = () => {
 
   const focus = async () => {
     try {
-      const onFocus = await camera.current.focus({
+      await camera.current.focus({
         x: 0.5,
         y: 0.5,
       });
-      console.log('focus', onFocus);
     } catch (e) {
       console.log(e);
       throw tryParseNativeCameraError(e);
@@ -53,14 +54,10 @@ const Home = () => {
         setShow(false);
       },
       onPanResponderRelease: (evt, gestureState) => {
-        console.log('Release');
         setLocationX(evt.nativeEvent.locationX.toFixed(2));
         setLocationY(evt.nativeEvent.locationY.toFixed(2));
         focus();
         setShow(true);
-      },
-      onPanResponderTerminate: (evt, gestureState) => {
-        console.log('Terminate');
       },
     }),
   ).current;
@@ -115,7 +112,6 @@ const Home = () => {
   }
 
   if (device == null) {
-    console.log('devices', device);
     return <ActivityIndicator />;
   }
 
