@@ -1,15 +1,172 @@
-import { View, Text } from 'react-native';
-import React from 'react';
+import { useIsFocused } from '@react-navigation/core';
+import React, { useEffect, useRef, useState } from 'react';
+import {
+  ActivityIndicator,
+  AppState,
+  NativeModules,
+  PanResponder,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import {
+  GestureHandlerRootView,
+  TapGestureHandler,
+} from 'react-native-gesture-handler';
+import {
+  Camera,
+  CameraCaptureError,
+  CameraRuntimeError,
+  useCameraDevices,
+} from 'react-native-vision-camera';
 import styles from './styles';
 
 const Home = () => {
+  const [cameraAccess, setCameraAccess] = useState(false);
+  const camera = useRef(null);
+  const [locationX, setLocationX] = useState(0);
+  const [locationY, setLocationY] = useState(0);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+      onMoveShouldSetPanResponder: (evt, gestureState) => false,
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => false,
+      onPanResponderGrant: (evt, gestureState) => false,
+      onPanResponderMove: (evt, gestureState) => false,
+      onPanResponderRelease: (evt, gestureState) => {
+        setLocationX(evt.nativeEvent.locationX.toFixed(2));
+        setLocationY(evt.nativeEvent.locationY.toFixed(2));
+      },
+    }),
+  ).current;
+
+  console.log('measureX', locationX);
+  console.log('measureY', locationY);
+
+  const useIsForeground = () => {
+    const [isForeground, setIsForeground] = useState(true);
+
+    useEffect(() => {
+      const onChange = state => {
+        setIsForeground(state === 'active');
+      };
+      const listener = AppState.addEventListener('change', onChange);
+      return () => listener.remove();
+    }, [setIsForeground]);
+
+    return isForeground;
+  };
+
+  // check if camera page is active
+  const isFocussed = useIsFocused();
+  const isForeground = useIsForeground();
+  const isActive = isFocussed && isForeground;
+
+  const askPermission = async () => {
+    try {
+      const getPermission = await Camera.getCameraPermissionStatus();
+      if (getPermission === 'denied') {
+        const reqPermission = await Camera.requestCameraPermission();
+        if (reqPermission === 'authorized') {
+          setCameraAccess(true);
+        }
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const devices = useCameraDevices();
+  const device = devices.back;
+
+  useEffect(() => {
+    askPermission();
+  }, []);
+
+  if (!cameraAccess) {
+    <View style={styles.container}>
+      <Text>No Permission</Text>
+    </View>;
+  }
+
+  if (device == null) {
+    console.log('devices', device);
+    return <ActivityIndicator />;
+  }
+
+  // check if camera has any errors
+  const isCameraErrorJson = error =>
+    typeof error === 'object' &&
+    error != null &&
+    typeof error.code === 'string' &&
+    typeof error.message === 'string' &&
+    (typeof error.cause === 'object' || error.cause == null);
+
+  const tryParseNativeCameraError = nativeError => {
+    if (isCameraErrorJson(nativeError)) {
+      if (nativeError.code.startsWith('capture')) {
+        return new CameraCaptureError(
+          nativeError.code,
+          nativeError.message,
+          nativeError.cause,
+        );
+      } else {
+        return new CameraRuntimeError(
+          nativeError.code,
+          nativeError.message,
+          nativeError.cause,
+        );
+      }
+    } else {
+      return nativeError;
+    }
+  };
+
+  const CameraModule = NativeModules.CameraView;
+  if (CameraModule == null) {
+    console.error("Camera: Native Module 'CameraView' was null!");
+  }
+
+  const focus = async () => {
+    try {
+      const onFocus = await camera.current.focus({
+        x: 0.5,
+        y: 0.5,
+      });
+      console.log('focus', onFocus);
+    } catch (e) {
+      throw tryParseNativeCameraError(e);
+    }
+  };
+
   return (
-    <View style={styles.screen}>
-      <Text style={styles.textStyle}>
-        Welcome To React Native Vision Camera Library Demo
-      </Text>
-      <Text style={styles.textStyle}>You can begin you work here.</Text>
-    </View>
+    <GestureHandlerRootView style={styles.screen}>
+      <TapGestureHandler numberOfTaps={1} onActivated={focus}>
+        <Camera
+          ref={camera}
+          style={StyleSheet.absoluteFill}
+          device={device}
+          isActive={isActive}
+          photo={true}
+        />
+      </TapGestureHandler>
+      <View style={styles.container}>
+        <View style={styles.innerView}>
+          <View
+            style={[
+              styles.dot,
+              {
+                top: parseFloat(locationY - 40),
+                left: parseFloat(locationX - 40),
+              },
+            ]}
+          />
+          <View style={styles.captureView} {...panResponder.panHandlers} />
+        </View>
+      </View>
+    </GestureHandlerRootView>
   );
 };
 
