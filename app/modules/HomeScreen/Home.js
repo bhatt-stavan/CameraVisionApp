@@ -26,18 +26,41 @@ const Home = () => {
   const camera = useRef(null);
   const [locationX, setLocationX] = useState(0);
   const [locationY, setLocationY] = useState(0);
+  const [show, setShow] = useState(false);
+
+  const focus = async () => {
+    try {
+      const onFocus = await camera.current.focus({
+        x: 0.5,
+        y: 0.5,
+      });
+      console.log('focus', onFocus);
+    } catch (e) {
+      console.log(e);
+      throw tryParseNativeCameraError(e);
+    }
+  };
 
   const panResponder = useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onStartShouldSetPanResponder: (evt, gestureState) => setShow(false),
       onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
       onMoveShouldSetPanResponder: (evt, gestureState) => false,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => false,
-      onPanResponderGrant: (evt, gestureState) => false,
       onPanResponderMove: (evt, gestureState) => false,
+      onPanResponderGrant: (evt, gestureState) => false,
+      onPanResponderEnd: () => {
+        setShow(false);
+      },
       onPanResponderRelease: (evt, gestureState) => {
+        console.log('Release');
         setLocationX(evt.nativeEvent.locationX.toFixed(2));
         setLocationY(evt.nativeEvent.locationY.toFixed(2));
+        focus();
+        setShow(true);
+      },
+      onPanResponderTerminate: (evt, gestureState) => {
+        console.log('Terminate');
       },
     }),
   ).current;
@@ -129,18 +152,6 @@ const Home = () => {
     console.error("Camera: Native Module 'CameraView' was null!");
   }
 
-  const focus = async () => {
-    try {
-      const onFocus = await camera.current.focus({
-        x: 0.5,
-        y: 0.5,
-      });
-      console.log('focus', onFocus);
-    } catch (e) {
-      throw tryParseNativeCameraError(e);
-    }
-  };
-
   return (
     <GestureHandlerRootView style={styles.screen}>
       <TapGestureHandler numberOfTaps={1} onActivated={focus}>
@@ -154,15 +165,17 @@ const Home = () => {
       </TapGestureHandler>
       <View style={styles.container}>
         <View style={styles.innerView}>
-          <View
-            style={[
-              styles.dot,
-              {
-                top: parseFloat(locationY - 40),
-                left: parseFloat(locationX - 40),
-              },
-            ]}
-          />
+          {show ? (
+            <View
+              style={[
+                styles.dot,
+                {
+                  top: parseFloat(locationY),
+                  left: parseFloat(locationX),
+                },
+              ]}
+            />
+          ) : null}
           <View style={styles.captureView} {...panResponder.panHandlers} />
         </View>
       </View>

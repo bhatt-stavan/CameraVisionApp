@@ -23,4 +23,4 @@ const globalMetrics = {
   isAndroid: Platform.OS !== 'ios',
 };
 
-export default { horizontalScale, verticalScale, moderateScale, globalMetrics };
+export { horizontalScale, verticalScale, moderateScale, globalMetrics };

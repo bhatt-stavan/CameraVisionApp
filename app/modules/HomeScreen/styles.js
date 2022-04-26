@@ -1,4 +1,5 @@
 import { Platform, StyleSheet } from 'react-native';
+import { moderateScale } from '../../theme/Metrics';
 
 const styles = StyleSheet.create({
   screen: {
@@ -6,10 +7,10 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
+    paddingTop: Platform.OS === 'ios' ? moderateScale(20) : 0,
   },
   innerContainer: {
-    paddingTop: Platform.OS === 'ios' ? 20 : 0,
+    paddingTop: Platform.OS === 'ios' ? moderateScale(20) : 0,
   },
   innerView: {
     flex: 1,
@@ -18,9 +19,9 @@ const styles = StyleSheet.create({
   dot: {
     position: 'absolute',
     borderColor: 'white',
-    borderWidth: 2,
-    height: 80,
-    width: 80,
+    borderWidth: moderateScale(2),
+    height: moderateScale(80),
+    width: moderateScale(80),
     borderRadius: 40,
   },
   captureView: { flex: 1, opacity: 0.97 },
