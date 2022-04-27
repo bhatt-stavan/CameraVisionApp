@@ -1,9 +1,9 @@
 import { useIsFocused } from '@react-navigation/core';
+import throttle from 'lodash/throttle';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   AppState,
-  LogBox,
   NativeModules,
   PanResponder,
   StyleSheet,
@@ -22,15 +22,34 @@ import {
 } from 'react-native-vision-camera';
 import styles from './styles';
 
-LogBox.ignoreAllLogs();
 const Home = () => {
-  const [cameraAccess, setCameraAccess] = useState(false);
+  const [cameraAccess, setCameraAccess] = useState(true);
   const camera = useRef(null);
   const [locationX, setLocationX] = useState(0);
   const [locationY, setLocationY] = useState(0);
   const [show, setShow] = useState(false);
 
-  const focus = async () => {
+  const tryParseNativeCameraError = nativeError => {
+    if (isCameraErrorJson(nativeError)) {
+      if (nativeError.code.startsWith('/capture')) {
+        return new CameraCaptureError(
+          nativeError.code,
+          nativeError.message,
+          nativeError.cause,
+        );
+      } else {
+        return new CameraRuntimeError(
+          nativeError.code,
+          nativeError.message,
+          nativeError.cause,
+        );
+      }
+    } else {
+      return nativeError;
+    }
+  };
+
+  const focus = throttle(async () => {
     try {
       await camera.current.focus({
         x: 0.5,
@@ -40,30 +59,31 @@ const Home = () => {
       console.log(e);
       throw tryParseNativeCameraError(e);
     }
+  }, 1500);
+
+  const onHide = () => {
+    setTimeout(function () {
+      setShow(false);
+    }, 1500);
   };
 
   const panResponder = useRef(
     PanResponder.create({
-      onStartShouldSetPanResponder: (evt, gestureState) => setShow(false),
+      onStartShouldSetPanResponder: (evt, gestureState) => true,
       onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
       onMoveShouldSetPanResponder: (evt, gestureState) => false,
       onMoveShouldSetPanResponderCapture: (evt, gestureState) => false,
       onPanResponderMove: (evt, gestureState) => false,
       onPanResponderGrant: (evt, gestureState) => false,
-      onPanResponderEnd: () => {
-        setShow(false);
-      },
       onPanResponderRelease: (evt, gestureState) => {
         setLocationX(evt.nativeEvent.locationX.toFixed(2));
         setLocationY(evt.nativeEvent.locationY.toFixed(2));
         focus();
         setShow(true);
+        onHide();
       },
     }),
   ).current;
-
-  console.log('measureX', locationX);
-  console.log('measureY', locationY);
 
   const useIsForeground = () => {
     const [isForeground, setIsForeground] = useState(true);
@@ -123,26 +143,6 @@ const Home = () => {
     typeof error.message === 'string' &&
     (typeof error.cause === 'object' || error.cause == null);
 
-  const tryParseNativeCameraError = nativeError => {
-    if (isCameraErrorJson(nativeError)) {
-      if (nativeError.code.startsWith('capture')) {
-        return new CameraCaptureError(
-          nativeError.code,
-          nativeError.message,
-          nativeError.cause,
-        );
-      } else {
-        return new CameraRuntimeError(
-          nativeError.code,
-          nativeError.message,
-          nativeError.cause,
-        );
-      }
-    } else {
-      return nativeError;
-    }
-  };
-
   const CameraModule = NativeModules.CameraView;
   if (CameraModule == null) {
     console.error("Camera: Native Module 'CameraView' was null!");
@@ -166,8 +166,8 @@ const Home = () => {
               style={[
                 styles.dot,
                 {
-                  top: parseFloat(locationY),
-                  left: parseFloat(locationX),
+                  top: parseFloat(locationY - 40),
+                  left: parseFloat(locationX - 40),
                 },
               ]}
             />
