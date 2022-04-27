@@ -88,25 +88,27 @@ const Home = () => {
 
           {!isCaptured ? (
             <>
-              <CustomButtons
-                path={images.flip}
-                onPressFun={() => setActiveCamera(!activeCamera)}
-              />
-              <CustomButtons
-                path={hdrPathHandler}
-                onPressFun={hdrHandler}
-                style={styles.hdrImage}
-              />
-              <CustomButtons
-                path={images.qr_code}
-                onPressFun={qrCodeHandle}
-                style={styles.qrImage}
-              />
-              <CustomButtons
-                path={images.face}
-                onPressFun={faceDetectionHandle}
-                style={styles.faceImage}
-              />
+              <>
+                <CustomButtons
+                  path={images.flip}
+                  onPressFun={() => setActiveCamera(!activeCamera)}
+                />
+                <CustomButtons
+                  path={hdrPathHandler}
+                  onPressFun={hdrHandler}
+                  style={styles.hdrImage}
+                />
+                <CustomButtons
+                  path={images.qr_code}
+                  onPressFun={qrCodeHandle}
+                  style={styles.qrImage}
+                />
+                <CustomButtons
+                  path={images.face}
+                  onPressFun={faceDetectionHandle}
+                  style={styles.faceImage}
+                />
+              </>
               {!activeCamera ? (
                 devices.front?.hasFlash ? (
                   <CustomButtons

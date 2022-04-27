@@ -5,6 +5,8 @@ const { verticalScale, horizontalScale, moderateScale } = Metrics;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   captureContainer: {
     flex: 1,
