@@ -427,6 +427,8 @@ PODS:
     - React-perflogger (= 0.67.0)
   - RNFS (2.19.0):
     - React-Core
+  - RNGestureHandler (2.4.1):
+    - React-Core
   - RNPermissions (3.3.1):
     - React-Core
   - RNReanimated (2.7.0):
@@ -533,6 +535,7 @@ DEPENDENCIES:
   - React-runtimeexecutor (from `../node_modules/react-native/ReactCommon/runtimeexecutor`)
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - RNFS (from `../node_modules/react-native-fs`)
+  - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
@@ -648,6 +651,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon"
   RNFS:
     :path: "../node_modules/react-native-fs"
+  RNGestureHandler:
+    :path: "../node_modules/react-native-gesture-handler"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
   RNReanimated:
@@ -730,6 +735,7 @@ SPEC CHECKSUMS:
   React-runtimeexecutor: 4512c9287cc72ba30bb1d5e01e6bde7a69f2d22b
   ReactCommon: af6dd2c8c0de935841fa809caf41b2093bb9075c
   RNFS: fc610f78fdf8bfc89a9e5cc2f898519f4dba1002
+  RNGestureHandler: 4f4986408310a43f1606c391f38f76e0d6e790d5
   RNPermissions: 34d678157c800b25b22a488e4d8babb57456e796
   RNReanimated: 96ab42cfb0e5517293499e0f3f810420eb459f75
   RNScreens: 40a2cb40a02a609938137a1e0acfbf8fc9eebf19

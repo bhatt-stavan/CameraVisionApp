@@ -1,5 +1,5 @@
 import { useIsFocused } from '@react-navigation/native';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
   ActivityIndicator,
   Image,
@@ -7,7 +7,15 @@ import {
   Text,
   TouchableOpacity,
   View,
+  PanResponder,
+  NativeModules,
+  AppState,
+  StyleSheet,
 } from 'react-native';
+import {
+  GestureHandlerRootView,
+  TapGestureHandler,
+} from 'react-native-gesture-handler';
 import { Camera } from 'react-native-vision-camera';
 import images from '../../assets/images/images';
 import CustomButtons from '../../components/CustomButton';
@@ -19,6 +27,35 @@ const Home = () => {
   const { isAuthentication, checkPermission } = useHandlePermission();
   const [startVideo, setStartVideo] = useState(false);
   const [isPress, setIsPress] = useState(true);
+  const [manualFocus, setManualFocus] = useState(false);
+  const [locationX, setLocationX] = useState(0);
+  const [locationY, setLocationY] = useState(0);
+  const [show, setShow] = useState(false);
+
+  const useIsForeground = () => {
+    const [isForeground, setIsForeground] = useState(true);
+
+    useEffect(() => {
+      const onChange = state => {
+        setIsForeground(state === 'active');
+      };
+      const listener = AppState.addEventListener('change', onChange);
+      return () => listener.remove();
+    }, [setIsForeground]);
+    return isForeground;
+  };
+
+  // check if camera page is active
+
+  const isForeground = useIsForeground();
+  const isActive = isFocused && isForeground;
+
+  const CameraModule = NativeModules.CameraView;
+
+  if (CameraModule == null) {
+    console.error("Camera: Native Module 'CameraView' was null!");
+  }
+
   const {
     image,
     isCaptured,
@@ -44,7 +81,7 @@ const Home = () => {
       flash: flashHandler,
       onRecordingFinished: video => {
         setStartVideo(false);
-        console.log('>>>>>>>', video.path);
+        // console.log('>>>>>>>', video.path);
         RNFS.moveFile(
           video.path,
           `${imagePathToBeStored}/${video.path.split('/').pop()}`,
@@ -53,6 +90,31 @@ const Home = () => {
       onRecordingError: error => console.error(error),
     });
   };
+
+  const onHide = () => {
+    setTimeout(function () {
+      setShow(false);
+    }, 1000);
+  };
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: (evt, gestureState) => true,
+      onStartShouldSetPanResponderCapture: (evt, gestureState) => true,
+      onMoveShouldSetPanResponder: (evt, gestureState) => false,
+      onMoveShouldSetPanResponderCapture: (evt, gestureState) => false,
+      onPanResponderMove: (evt, gestureState) => false,
+      onPanResponderGrant: (evt, gestureState) => false,
+      onPanResponderRelease: (evt, gestureState) => {
+        setLocationX(evt.nativeEvent.locationX.toFixed(2));
+        setLocationY(evt.nativeEvent.locationY.toFixed(2));
+        // console.log(evt.nativeEvent.locationX);
+        // console.log(evt.nativeEvent.locationY);
+        setShow(true);
+        onHide();
+      },
+    }),
+  ).current;
 
   useEffect(() => {
     checkPermission();
@@ -71,24 +133,104 @@ const Home = () => {
     <>
       {isAuthentication ? (
         <>
-          <Camera
-            ref={camera}
-            style={styles.screen}
-            device={activeCamera ? devices.back : devices.front}
-            isActive={true}
-            photo={true}
-            video={startVideo}
-            audio={true}
-            VideoFileType={'mp4'}
-            fps={240}
-            videoStabilizationMode={'Standard'}
-            hdr={hdrMode}
-            lowLightBoost={true}
-          />
+          {!manualFocus ? (
+            <GestureHandlerRootView style={styles.styleFlex}>
+              <TapGestureHandler
+                numberOfTaps={2}
+                onActivated={() => {
+                  setActiveCamera(!activeCamera);
+                }}>
+                <Camera
+                  ref={camera}
+                  style={styles.screen}
+                  device={activeCamera ? devices.back : devices.front}
+                  isActive={true}
+                  photo={true}
+                  video={startVideo}
+                  audio={true}
+                  VideoFileType={'mp4'}
+                  fps={240}
+                  videoStabilizationMode={'Standard'}
+                  hdr={hdrMode}
+                  lowLightBoost={true}
+                />
+              </TapGestureHandler>
+            </GestureHandlerRootView>
+          ) : (
+            <>
+              <GestureHandlerRootView style={styles.styleFlex}>
+                <TapGestureHandler
+                  numberOfTaps={1}
+                  onHandlerStateChange={({ nativeEvent }) => {
+                    camera?.current?.focus({
+                      x: nativeEvent.x,
+                      y: nativeEvent.y,
+                    });
+                  }}>
+                  <Camera
+                    ref={camera}
+                    style={StyleSheet.absoluteFill}
+                    device={activeCamera ? devices.back : devices.front}
+                    isActive={isActive}
+                    photo={true}
+                  />
+                </TapGestureHandler>
+                <View style={styles.container}>
+                  <View style={styles.innerView}>
+                    {show ? (
+                      <View
+                        style={[
+                          styles.dot,
+                          {
+                            top: parseFloat(locationY - 20),
+                            left: parseFloat(locationX - 20),
+                          },
+                        ]}
+                      />
+                    ) : null}
+                    <View
+                      style={styles.captureView}
+                      {...panResponder.panHandlers}
+                    />
+                  </View>
+                </View>
+              </GestureHandlerRootView>
+            </>
+          )}
 
           {!isCaptured ? (
             <>
               <>
+                <>
+                  {manualFocus ? (
+                    <>
+                      <CustomButtons
+                        path={images.focus}
+                        onPressFun={() => {
+                          setManualFocus(!manualFocus);
+                        }}
+                        style={styles.focusOff}
+                      />
+                      <CustomButtons
+                        path={images.cancel}
+                        imageStyle={styles.focusCancel}
+                        onPressFun={() => {
+                          setManualFocus(!manualFocus);
+                        }}
+                        style={styles.focusOn}
+                      />
+                    </>
+                  ) : (
+                    <CustomButtons
+                      path={images.focus}
+                      onPressFun={() => {
+                        setManualFocus(!manualFocus);
+                      }}
+                      style={styles.focusOff}
+                    />
+                  )}
+                </>
+
                 <CustomButtons
                   path={images.flip}
                   onPressFun={() => setActiveCamera(!activeCamera)}
@@ -142,9 +284,7 @@ const Home = () => {
                   onPressOut={() => {
                     camera.current
                       .stopRecording()
-                      .then(res =>
-                        console.log('StoppingVVideo: >>>>>>>>', res),
-                      );
+                      .then(res => console.log('StoppingVideo: >>>>>>>>', res));
                     setIsPress(true);
                   }}
                 />

@@ -9,4 +9,5 @@ export default {
   qr_scanner: require('../images/qr_scanner.png'),
   qr_code: require('./qr_code.png'),
   face: require('./face.png'),
+  focus: require('./focus.png'),
 };

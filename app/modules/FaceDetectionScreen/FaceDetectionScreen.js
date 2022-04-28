@@ -20,7 +20,7 @@ const FaceDetectionScreen = () => {
     return null;
   }
   const { width, height } = Dimensions.get('window');
-  console.log(width, height);
+  // console.log(width, height);
   const x = faces?.x ?? 0;
   const y = faces?.y ?? 0;
   return (
