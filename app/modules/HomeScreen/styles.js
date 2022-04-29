@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { Metrics, Colors } from '../../theme';
+import { Colors, Metrics } from '../../theme';
 
 const { verticalScale, horizontalScale, moderateScale } = Metrics;
 const styles = StyleSheet.create({
@@ -60,6 +60,47 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(40),
     borderRadius: moderateScale(80),
     backgroundColor: Colors.red,
+  },
+
+  zoomAndRingSeparator: { height: 20 },
+  emptyFlexContainer: { flex: 1.6 },
+  zoomButtonsContainers: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    width: '45%',
+    backgroundColor: Colors.grayTransparent,
+    paddingVertical: 5,
+    borderRadius: 20,
+    paddingHorizontal: 5,
+  },
+  zoomContainer: {
+    backgroundColor: 'pink',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '50%',
+  },
+  zoomTextStyle: {
+    fontSize: moderateScale(10),
+    color: Colors.black,
+    fontWeight: '600',
+  },
+  selectedZoom: {
+    height: moderateScale(30),
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: moderateScale(30),
+    borderRadius: moderateScale(15),
+    backgroundColor: Colors.white,
+  },
+  inactiveZoom: {
+    height: moderateScale(10),
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: moderateScale(10),
+    borderRadius: moderateScale(5),
+    backgroundColor: Colors.white,
   },
 });
 

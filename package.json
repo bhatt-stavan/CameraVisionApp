@@ -15,7 +15,7 @@
     "lottie-react-native": "^5.0.1",
     "ramda": "^0.28.0",
     "react": "17.0.2",
-    "react-native": "0.67.0",
+    "react-native": "^0.67.0",
     "react-native-fs": "^2.19.0",
     "react-native-permissions": "^3.3.1",
     "react-native-reanimated": "^2.7.0",

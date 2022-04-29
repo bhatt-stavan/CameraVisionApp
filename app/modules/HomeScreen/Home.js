@@ -8,13 +8,45 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { Camera } from 'react-native-vision-camera';
+import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import images from '../../assets/images/images';
 import CustomButtons from '../../components/CustomButton';
 import { useHandleHomeStates, useHandlePermission } from '../../hooks';
 import styles from './styles';
 
+const ZoomButton = ({
+  onSelect = arg => {},
+  setMinimumZoom = arg => {},
+  dotStyle,
+  minZoom,
+  x,
+}) => {
+  return (
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={() => {
+        onSelect();
+        setMinimumZoom();
+      }}
+      style={{
+        height: 30,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 30,
+        borderRadius: 15,
+      }}>
+      <View style={dotStyle === x ? styles.selectedZoom : styles.inactiveZoom}>
+        {dotStyle === x ? (
+          <Text style={styles.zoomTextStyle}>{minZoom}x</Text>
+        ) : null}
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 const Home = () => {
+  const myDevices = useCameraDevices();
+
   const isFocused = useIsFocused();
   const { isAuthentication, checkPermission } = useHandlePermission();
   const [startVideo, setStartVideo] = useState(false);
@@ -39,6 +71,16 @@ const Home = () => {
     faceDetectionHandle,
   } = useHandleHomeStates();
 
+  const device = devices.back;
+  const fishEyeZoom = device?.minZoom ?? 1;
+  const minZoom = device?.neutralZoom ?? 1;
+  const maxZoom = device?.maxZoom ?? 1;
+  const semiMaxZoom = (minZoom + maxZoom) / 2 ?? 1;
+  const neutralZoom = device?.neutralZoom ?? 1;
+  const [zoom, setZoom] = useState(minZoom);
+
+  const [dotStyle, setDotStyle] = useState(1);
+
   const captureVideo = () => {
     camera.current.startRecording({
       flash: flashHandler,
@@ -53,6 +95,12 @@ const Home = () => {
       onRecordingError: error => console.error(error),
     });
   };
+
+  useEffect(() => {
+    console.log('________', minZoom);
+    console.log('________', maxZoom);
+    console.log('________', neutralZoom);
+  });
 
   useEffect(() => {
     checkPermission();
@@ -84,6 +132,7 @@ const Home = () => {
             videoStabilizationMode={'Standard'}
             hdr={hdrMode}
             lowLightBoost={true}
+            zoom={zoom}
           />
 
           {!isCaptured ? (
@@ -91,7 +140,9 @@ const Home = () => {
               <>
                 <CustomButtons
                   path={images.flip}
-                  onPressFun={() => setActiveCamera(!activeCamera)}
+                  onPressFun={() => {
+                    setActiveCamera(!activeCamera);
+                  }}
                 />
                 <CustomButtons
                   path={hdrPathHandler}
@@ -126,7 +177,41 @@ const Home = () => {
                   style={styles.flashImage}
                 />
               )}
+
               <View style={styles.captureContainer}>
+                <View style={styles.zoomButtonsContainers}>
+                  {fishEyeZoom < minZoom && (
+                    <ZoomButton
+                      onSelect={() => setDotStyle(0)}
+                      setMinimumZoom={() => setZoom(fishEyeZoom)}
+                      dotStyle={dotStyle}
+                      minZoom={fishEyeZoom}
+                      x={0}
+                    />
+                  )}
+                  <ZoomButton
+                    onSelect={() => setDotStyle(1)}
+                    setMinimumZoom={() => setZoom(minZoom)}
+                    dotStyle={dotStyle}
+                    minZoom={minZoom}
+                    x={1}
+                  />
+                  <ZoomButton
+                    onSelect={() => setDotStyle(2)}
+                    setMinimumZoom={() => setZoom(semiMaxZoom)}
+                    dotStyle={dotStyle}
+                    minZoom={semiMaxZoom}
+                    x={2}
+                  />
+                  <ZoomButton
+                    onSelect={() => setDotStyle(3)}
+                    setMinimumZoom={() => setZoom(maxZoom)}
+                    dotStyle={dotStyle}
+                    minZoom={maxZoom}
+                    x={3}
+                  />
+                </View>
+                <View style={{ height: 10 }} />
                 <TouchableOpacity
                   style={isPress ? styles.circleRing : styles.redRing}
                   onPress={takePhoto}
