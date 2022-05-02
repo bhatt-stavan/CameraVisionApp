@@ -1,8 +1,40 @@
-import { StyleSheet } from 'react-native';
+import { Platform, StyleSheet } from 'react-native';
 import { Metrics, Colors } from '../../theme';
 
 const { verticalScale, horizontalScale, moderateScale } = Metrics;
 const styles = StyleSheet.create({
+  styleFlex: {
+    flex: 1,
+  },
+  focusCancel: {
+    height: 43,
+    width: 43,
+    marginTop: -6,
+    marginRight: -6,
+  },
+  container: {
+    flex: 1,
+    paddingTop: Platform.OS === 'ios' ? moderateScale(20) : 0,
+  },
+  innerContainer: {
+    paddingTop: Platform.OS === 'ios' ? moderateScale(20) : 0,
+  },
+  innerView: {
+    flex: 1,
+    overflow: 'hidden',
+  },
+  dot: {
+    position: 'absolute',
+    borderColor: 'white',
+    borderWidth: moderateScale(2),
+    height: moderateScale(45),
+    width: moderateScale(45),
+    borderRadius: 40,
+  },
+  captureView: {
+    opacity: 0.9,
+    flex: 1,
+  },
   screen: {
     flex: 1,
     alignItems: 'center',
@@ -39,6 +71,12 @@ const styles = StyleSheet.create({
   },
   faceImage: {
     top: Metrics.verticalScale(150),
+  },
+  focusOff: {
+    top: Metrics.verticalScale(250),
+  },
+  focusOn: {
+    top: Metrics.verticalScale(250),
   },
   cancelButton: {
     height: horizontalScale(40),
