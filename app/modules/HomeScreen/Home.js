@@ -1,16 +1,16 @@
 import { useIsFocused } from '@react-navigation/native';
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
+  AppState,
   Image,
   ImageBackground,
+  NativeModules,
+  PanResponder,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  PanResponder,
-  NativeModules,
-  AppState,
-  StyleSheet,
 } from 'react-native';
 import {
   GestureHandlerRootView,
@@ -272,7 +272,7 @@ const Home = () => {
                 <TouchableOpacity
                   style={isPress ? styles.circleRing : styles.redRing}
                   onPress={takePhoto}
-                  delayLongPress={1000}
+                  delayLongPress={750}
                   activeOpacity={0.5}
                   onLongPress={() => {
                     captureVideo();
