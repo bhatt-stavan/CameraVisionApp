@@ -1,6 +1,12 @@
 import { useIsFocused } from '@react-navigation/native';
-import React from 'react';
-import { ActivityIndicator, Dimensions, Text, View } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  ActivityIndicator,
+  AppState,
+  Dimensions,
+  Text,
+  View,
+} from 'react-native';
 import Svg, { Rect } from 'react-native-svg';
 import { Camera, useCameraDevices } from 'react-native-vision-camera';
 import { useFaceDetection } from '../../hooks/useFaceDetection';
@@ -11,30 +17,53 @@ const FaceDetectionScreen = () => {
   const device = devices.front;
 
   const isFocused = useIsFocused();
+  const useIsForeground = () => {
+    const [isForeground, setIsForeground] = useState(true);
+
+    useEffect(() => {
+      const onChange = state => {
+        setIsForeground(state === 'active');
+      };
+      const listener = AppState.addEventListener('change', onChange);
+      return () => listener.remove();
+    }, [setIsForeground]);
+    return isForeground;
+  };
+
+  // check if camera page is active
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  const isForeground = useIsForeground();
+  const isActive = isFocused && isForeground;
+
   const { faces, frameProcessor } = useFaceDetection();
 
-  if (devices.front == null) {
-    return <ActivityIndicator style={styles.screen} />;
-  }
-  if (!isFocused) {
-    return null;
-  }
   const { width, height } = Dimensions.get('window');
   // console.log(width, height);
   const x = faces?.x ?? 0;
   const y = faces?.y ?? 0;
+
+  if (devices.front == null) {
+    return <ActivityIndicator style={styles.screen} />;
+  }
+
+  if (!isFocused) {
+    return null;
+  }
+
   return (
     <>
       <Camera
         style={styles.screen}
         device={device}
-        isActive={true}
+        isActive={isActive}
         video={true}
         frameProcessor={
           device.supportsParallelVideoProcessing ? frameProcessor : undefined
         }
         frameProcessorFps={5}
       />
+
       {/* <View
         style={{
           position: 'absolute',
