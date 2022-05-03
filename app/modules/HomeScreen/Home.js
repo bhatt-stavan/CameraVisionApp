@@ -22,6 +22,30 @@ import CustomButtons from '../../components/CustomButton';
 import { useHandleHomeStates, useHandlePermission } from '../../hooks';
 import styles from './styles';
 
+const ZoomButton = ({
+  onSelect = arg => {},
+  setMinimumZoom = arg => {},
+  dotStyle,
+  minZoom,
+  x,
+}) => {
+  return (
+    <TouchableOpacity
+      activeOpacity={1}
+      onPress={() => {
+        onSelect();
+        setMinimumZoom();
+      }}
+      style={styles.zoomButtonView}>
+      <View style={dotStyle === x ? styles.selectedZoom : styles.inactiveZoom}>
+        {dotStyle === x ? (
+          <Text style={styles.zoomTextStyle}>{minZoom}x</Text>
+        ) : null}
+      </View>
+    </TouchableOpacity>
+  );
+};
+
 const Home = () => {
   const isFocused = useIsFocused();
   const { isAuthentication, checkPermission } = useHandlePermission();
@@ -76,12 +100,22 @@ const Home = () => {
     faceDetectionHandle,
   } = useHandleHomeStates();
 
+  //Zooming Code
+  const device = devices.back;
+  const fishEyeZoom = device?.minZoom ?? 1;
+  const minZoom = device?.neutralZoom ?? 1;
+  const maxZoom = device?.maxZoom ?? 1;
+  const semiMaxZoom = (minZoom + maxZoom) / 2 ?? 1;
+  const neutralZoom = device?.neutralZoom ?? 1;
+  const [zoom, setZoom] = useState(minZoom);
+
+  const [dotStyle, setDotStyle] = useState(1);
+
   const captureVideo = () => {
     camera.current.startRecording({
       flash: flashHandler,
       onRecordingFinished: video => {
         setStartVideo(false);
-        // console.log('>>>>>>>', video.path);
         RNFS.moveFile(
           video.path,
           `${imagePathToBeStored}/${video.path.split('/').pop()}`,
@@ -108,8 +142,6 @@ const Home = () => {
       onPanResponderRelease: (evt, gestureState) => {
         setLocationX(evt.nativeEvent.locationX.toFixed(2));
         setLocationY(evt.nativeEvent.locationY.toFixed(2));
-        // console.log(evt.nativeEvent.locationX);
-        // console.log(evt.nativeEvent.locationY);
         setShow(true);
         onHide();
       },
@@ -153,6 +185,7 @@ const Home = () => {
                   videoStabilizationMode={'Standard'}
                   hdr={hdrMode}
                   lowLightBoost={true}
+                  zoom={zoom}
                 />
               </TapGestureHandler>
             </GestureHandlerRootView>
@@ -200,10 +233,28 @@ const Home = () => {
 
           {!isCaptured ? (
             <>
-              <>
+              <View style={styles.viewModesStyle}>
                 <>
-                  {manualFocus ? (
-                    <>
+                  <>
+                    {manualFocus ? (
+                      <>
+                        <CustomButtons
+                          path={images.focus}
+                          onPressFun={() => {
+                            setManualFocus(!manualFocus);
+                          }}
+                          style={styles.focusOff}
+                        />
+                        <CustomButtons
+                          path={images.cancel}
+                          imageStyle={styles.focusCancel}
+                          onPressFun={() => {
+                            setManualFocus(!manualFocus);
+                          }}
+                          style={styles.focusOn}
+                        />
+                      </>
+                    ) : (
                       <CustomButtons
                         path={images.focus}
                         onPressFun={() => {
@@ -211,64 +262,83 @@ const Home = () => {
                         }}
                         style={styles.focusOff}
                       />
-                      <CustomButtons
-                        path={images.cancel}
-                        imageStyle={styles.focusCancel}
-                        onPressFun={() => {
-                          setManualFocus(!manualFocus);
-                        }}
-                        style={styles.focusOn}
-                      />
-                    </>
-                  ) : (
-                    <CustomButtons
-                      path={images.focus}
-                      onPressFun={() => {
-                        setManualFocus(!manualFocus);
-                      }}
-                      style={styles.focusOff}
-                    />
-                  )}
-                </>
+                    )}
+                  </>
 
-                <CustomButtons
-                  path={images.flip}
-                  onPressFun={() => setActiveCamera(!activeCamera)}
-                />
-                <CustomButtons
-                  path={hdrPathHandler}
-                  onPressFun={hdrHandler}
-                  style={styles.hdrImage}
-                />
-                <CustomButtons
-                  path={images.qr_code}
-                  onPressFun={qrCodeHandle}
-                  style={styles.qrImage}
-                />
-                <CustomButtons
-                  path={images.face}
-                  onPressFun={faceDetectionHandle}
-                  style={styles.faceImage}
-                />
-              </>
-              {!activeCamera ? (
-                devices.front?.hasFlash ? (
                   <CustomButtons
-                    onPressFun={flashHandler}
+                    path={images.flip}
+                    onPressFun={() => setActiveCamera(!activeCamera)}
+                  />
+                  <CustomButtons
+                    path={hdrPathHandler}
+                    onPressFun={hdrHandler}
+                    style={styles.hdrImage}
+                  />
+                  <CustomButtons
+                    path={images.qr_code}
+                    onPressFun={qrCodeHandle}
+                    style={styles.qrImage}
+                  />
+                  <CustomButtons
+                    path={images.face}
+                    onPressFun={faceDetectionHandle}
+                    style={styles.faceImage}
+                  />
+                </>
+                {!activeCamera ? (
+                  devices.front?.hasFlash ? (
+                    <CustomButtons
+                      onPressFun={flashHandler}
+                      path={flashPathHandler}
+                      style={styles.flashImage}
+                    />
+                  ) : (
+                    <></>
+                  )
+                ) : (
+                  <CustomButtons
                     path={flashPathHandler}
+                    onPressFun={flashHandler}
                     style={styles.flashImage}
                   />
-                ) : (
-                  <></>
-                )
-              ) : (
-                <CustomButtons
-                  path={flashPathHandler}
-                  onPressFun={flashHandler}
-                  style={styles.flashImage}
-                />
-              )}
+                )}
+              </View>
+
               <View style={styles.captureContainer}>
+                {/* ------------------Zooming Code Start-----------*/}
+                <View style={styles.zoomButtonsContainers}>
+                  {fishEyeZoom < minZoom && (
+                    <ZoomButton
+                      onSelect={() => setDotStyle(0)}
+                      setMinimumZoom={() => setZoom(fishEyeZoom)}
+                      dotStyle={dotStyle}
+                      minZoom={fishEyeZoom}
+                      x={0}
+                    />
+                  )}
+                  <ZoomButton
+                    onSelect={() => setDotStyle(1)}
+                    setMinimumZoom={() => setZoom(minZoom)}
+                    dotStyle={dotStyle}
+                    minZoom={minZoom}
+                    x={1}
+                  />
+                  <ZoomButton
+                    onSelect={() => setDotStyle(2)}
+                    setMinimumZoom={() => setZoom(semiMaxZoom)}
+                    dotStyle={dotStyle}
+                    minZoom={semiMaxZoom}
+                    x={2}
+                  />
+                  <ZoomButton
+                    onSelect={() => setDotStyle(3)}
+                    setMinimumZoom={() => setZoom(maxZoom)}
+                    dotStyle={dotStyle}
+                    minZoom={maxZoom}
+                    x={3}
+                  />
+                </View>
+                {/* --------------------Zooming Code End------------------ */}
                 <TouchableOpacity
                   style={isPress ? styles.circleRing : styles.redRing}
                   onPress={takePhoto}

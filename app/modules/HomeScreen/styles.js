@@ -1,5 +1,5 @@
 import { Platform, StyleSheet } from 'react-native';
-import { Metrics, Colors } from '../../theme';
+import { Colors, Metrics } from '../../theme';
 
 const { verticalScale, horizontalScale, moderateScale } = Metrics;
 const styles = StyleSheet.create({
@@ -51,7 +51,7 @@ const styles = StyleSheet.create({
   circleRing: {
     borderWidth: 5,
     padding: moderateScale(30),
-    marginBottom: verticalScale(40),
+    marginBottom: verticalScale(20),
     borderRadius: moderateScale(80),
     borderColor: 'white',
   },
@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   flashImage: {
-    top: Metrics.verticalScale(200),
+    top: Metrics.verticalScale(250),
   },
   hdrImage: {
     top: Metrics.verticalScale(50),
@@ -73,10 +73,10 @@ const styles = StyleSheet.create({
     top: Metrics.verticalScale(150),
   },
   focusOff: {
-    top: Metrics.verticalScale(250),
+    top: Metrics.verticalScale(200),
   },
   focusOn: {
-    top: Metrics.verticalScale(250),
+    top: Metrics.verticalScale(200),
   },
   cancelButton: {
     height: horizontalScale(40),
@@ -95,9 +95,67 @@ const styles = StyleSheet.create({
     borderWidth: 5,
     height: verticalScale(8),
     padding: moderateScale(30),
-    marginBottom: verticalScale(40),
+    marginBottom: verticalScale(20),
     borderRadius: moderateScale(80),
     backgroundColor: Colors.red,
+  },
+
+  zoomAndRingSeparator: { height: verticalScale(20) },
+  emptyFlexContainer: { flex: 1.6 },
+  zoomButtonsContainers: {
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    flexDirection: 'row',
+    width: '45%',
+    backgroundColor: Colors.grayTransparent,
+    paddingVertical: verticalScale(5),
+    borderRadius: moderateScale(20),
+    paddingHorizontal: horizontalScale(5),
+    marginBottom: verticalScale(20),
+  },
+  zoomContainer: {
+    backgroundColor: 'pink',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: '50%',
+  },
+  zoomTextStyle: {
+    fontSize: moderateScale(10),
+    color: Colors.black,
+    fontWeight: '600',
+  },
+  selectedZoom: {
+    height: verticalScale(30),
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: horizontalScale(30),
+    borderRadius: moderateScale(15),
+    backgroundColor: Colors.white,
+  },
+  inactiveZoom: {
+    height: verticalScale(10),
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: horizontalScale(10),
+    borderRadius: moderateScale(5),
+    backgroundColor: Colors.white,
+  },
+  zoomButtonView: {
+    height: verticalScale(30),
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: horizontalScale(30),
+    borderRadius: moderateScale(15),
+  },
+  viewModesStyle: {
+    position: 'absolute',
+    width: horizontalScale(60),
+    borderRadius: moderateScale(40),
+    height: verticalScale(310),
+    right: horizontalScale(10),
+    top: verticalScale(10),
+    backgroundColor: Colors.grayTransparent,
   },
 });
 
