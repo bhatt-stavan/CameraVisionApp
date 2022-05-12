@@ -20,7 +20,7 @@ const useHandleHomeStates = () => {
 
   const takePhoto = () => {
     camera.current
-      .takeSnapshot({
+      .takePhoto({
         flash: `${camFlash}`,
         quality: 100,
         skipMetadata: true,
